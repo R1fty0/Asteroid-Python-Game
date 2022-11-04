@@ -10,12 +10,12 @@ WIDTH, HEIGHT = 1000, 500
 
 # Images - Goes through the file's directory via the operating system to access this image.
 ORIGINAL_SPACESHIP_IMAGE = pygame.image.load(os.path.join("venv", "spaceship.png"))
-ORIGINAL_BACKGROUND_IMAGE = pygame.image.load(os.path.join("venv", "background.jpg"))
+ORIGINAL_BACKGROUND_IMAGE = pygame.image.load(os.path.join("venv", "background.png"))
 ORIGINAL_LASER_IMAGE = pygame.image.load(os.path.join("venv", "shiplaser.png"))
 
 
 # Spaceship Dimensions
-SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 58, 96
+SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 99, 76
 
 # Scales Images
 SPACESHIP_IMAGE = pygame.transform.scale(ORIGINAL_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
