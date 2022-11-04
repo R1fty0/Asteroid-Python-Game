@@ -1,47 +1,61 @@
 import pygame
 import os
-
+from classes import Weapon
+from classes import Powerups
+from classes import Meteor
+from classes import Spaceship
+from pygame import mouse
+import math
 
 # The Frames Per Second the Program is running at:
 FPS = 60
 
 # Width and Height of the Window
-WIDTH, HEIGHT = 1000, 500
-
-# Images - Goes through the file's directory via the operating system to access this image.
-ORIGINAL_SPACESHIP_IMAGE = pygame.image.load(os.path.join("venv", "spaceship.png"))
-ORIGINAL_BACKGROUND_IMAGE = pygame.image.load(os.path.join("venv", "background.png"))
-ORIGINAL_LASER_IMAGE = pygame.image.load(os.path.join("venv", "shiplaser.png"))
-
+WIDTH, HEIGHT = 1920, 1080
 
 # Spaceship Dimensions
 SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 99, 76
 
+
+# Images - Goes through the file's directory via the operating system to access these images.
+ORIGINAL_SPACESHIP = pygame.image.load(os.path.join("venv", "spaceship.png"))  # Spaceship Image
+ORIGINAL_BACKGROUND = pygame.image.load(os.path.join("venv", "background.jpg"))  # Background Image
+ORIGINAL_LASER = pygame.image.load(os.path.join("venv", "shiplaser.png"))  # Laser Image
+ORIGINAL_METEOR = pygame.image.load(os.path.join("venv", "meteorBrown_big1.png"))  # Big Meteor Image
+ORIGINAL_MED_METEOR = pygame.image.load(os.path.join("venv", "meteorBrown_med1.png"))  # Medium Meteor Image
+ORIGINAL_SMALL_ASTEROID = pygame.image.load(os.path.join("venv", "meteorBrown_tiny1.png"))  # Small Meteor Image
+
+
 # Scales Images
-SPACESHIP_IMAGE = pygame.transform.scale(ORIGINAL_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
-BACKGROUND_IMAGE = pygame.transform.scale(ORIGINAL_BACKGROUND_IMAGE, (WIDTH, HEIGHT))
-LASER_IMAGE = pygame.transform.scale(ORIGINAL_LASER_IMAGE, (SPACESHIP_WIDTH/2, SPACESHIP_HEIGHT/2))
+SPACESHIP = pygame.transform.scale(ORIGINAL_SPACESHIP, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
+BACKGROUND = pygame.transform.scale(ORIGINAL_BACKGROUND, (WIDTH, HEIGHT))
+LASER = pygame.transform.scale(ORIGINAL_LASER, (SPACESHIP_WIDTH/2, SPACESHIP_HEIGHT/2))
 
 
 # Creates Window
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 # Names the title of the program
-pygame.display.set_caption("Asteroids V1.0")
+pygame.display.set_caption("Asteroids!")
 
-# Speed of the Spaceship
-SPEED = 5
-# Bullet Speed
-BULLET_SPEED = 5
-# Max Ammo
-MAX_AMMO = 5
+
+
 
 
 # Draws Stuff on the Screen
-def draw(spaceship):
+def update(spaceship):
     # Draw a surface/sprite on the screen at the x and y coordinates provided
-    WIN.blit(BACKGROUND_IMAGE, (0, 0))
+    WIN.blit(BACKGROUND, (0, 0))
     # Draws the Spaceship at the coordinates that the image is supposed to be according to the pygame.Rect method.
-    WIN.blit(SPACESHIP_IMAGE, (spaceship.x, spaceship.y))
+    WIN.blit(SPACESHIP, (spaceship.x, spaceship.y))
+
+    # Makes the Spaceship face the mouse. By the way, this is not my code - I adapted it from Stack Overflow
+    mouseX, mouseY = pygame.mouse.get_pos()
+    playerX, playerY = spaceship.centerx, spaceship.centery
+
+    # Fancy Math Calculation that calcuates the rotation required for the spaceship to face the mouse.
+    angle = math.atan2(playerX - mouseX, playerY - mouseY)
+    pygame.transform.rotate(SPACESHIP, angle)
+
     pygame.display.update()
 
 
@@ -52,16 +66,16 @@ def movement(spaceship):
 
     if key_down[pygame.K_a]:
         # Moves Player to the Right
-        spaceship.x -= SPEED
+        spaceship.x -= Spaceship.Speed
     if key_down[pygame.K_d]:
         # Moves Player to the Left
-        spaceship.x += SPEED
+        spaceship.x += Spaceship.Speed
     if key_down[pygame.K_w]:
         # Moves Player Forward
-        spaceship.y -= SPEED
+        spaceship.y -= Spaceship.Speed
     if key_down[pygame.K_s]:
         # Moves Player Backwards
-        spaceship.y += SPEED
+        spaceship.y += Spaceship.Speed
 
 
 # Same as the Unity Update or Greenfoot Act Method
@@ -69,7 +83,7 @@ def main():
     # Sets Player Position - Arguments for pygame.Rect() = x, y, width, height.
     spaceship = pygame.Rect(500, 250, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
 
-    bullets = []
+    laser = []
 
     # Clock that maintains FPS
     clock = pygame.time.Clock()
@@ -81,13 +95,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            # Handles Shooting
-            # if event.type == pygame.KEYDOWN:
-                # if event.key == pygame.K_LCTRL and len(bullets) < MAX_AMMO:
-                # bullets.append(laser)
-        # handle_weapons(bullets)
+            if event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_LSHIFT:
+                    shot = pygame.Rect(spaceship.centerx,spaceship.centery + SPACESHIP_HEIGHT, 10, 5)
         movement(spaceship)
-        draw(spaceship)
+        update(spaceship)
 
     # Quits program
     pygame.quit()
