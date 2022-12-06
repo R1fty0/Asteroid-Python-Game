@@ -11,10 +11,10 @@ import math
 FPS = 60
 
 # Width and Height of the Window
-WIDTH, HEIGHT = 1920, 1080
+WIDTH, HEIGHT = 1000, 500
 
 # Spaceship Dimensions
-SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 99, 76
+SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 88, 66
 
 
 # Images - Goes through the file's directory via the operating system to access these images.
@@ -38,9 +38,6 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Asteroids!")
 
 
-
-
-
 # Draws Stuff on the Screen
 def update(spaceship):
     # Draw a surface/sprite on the screen at the x and y coordinates provided
@@ -52,7 +49,7 @@ def update(spaceship):
     mouseX, mouseY = pygame.mouse.get_pos()
     playerX, playerY = spaceship.centerx, spaceship.centery
 
-    # Fancy Math Calculation that calcuates the rotation required for the spaceship to face the mouse.
+    # Fancy Math Calculation that calculates the rotation required for the spaceship to face the mouse.
     angle = math.atan2(playerX - mouseX, playerY - mouseY)
     pygame.transform.rotate(SPACESHIP, angle)
 
